@@ -1,0 +1,107 @@
+\documentclass[a4paper, 11pt]{article}
+
+% % % % % % % % % % % % % % Usepackages % % % % % % % % % % % % % % % % % % % % % %
+\usepackage[utf 8]{inputenc}				% fuer Umlaute
+\usepackage{amsmath}						% Mathebibliothek, notwendig für Matrizenschreibweise
+\usepackage{tikz}							% fuer Tikz-Skizzen
+\usepackage{graphicx}						% um Bilder einzufügen
+\usepackage{fancyhdr}						% fue Fancy-Header notwendig
+\usepackage[left=2.5cm,
+			right=2.5cm,
+			top=2.5cm,
+			bottom=2.5cm,
+			includeheadfoot]{geometry}		% Seitraender anpassen
+
+
+\usepackage{caption}[2008/08/24]			% fuer Bilderbeschriftung
+\usepackage{pifont}							% fue checkmarks and other symbols
+\usepackage{amssymb}
+\usepackage{german}
+\usepackage{geometry}
+
+
+% Header einfuegen, ueber fancy-Header
+\pagestyle{fancy} 				% eigener Seitenstil
+\fancyhf{} 						% alle Kopf- und Fußzeilenfelder bereinigen
+\lhead{Nistelberger}		% Linker Header Teil
+\chead{Softwareparadigmen}	% Mittlerer Header Teil
+\rhead{Hausübung 1}					% Rechter Header Teil
+\rfoot{Seite \thepage}
+\renewcommand{\headrulewidth}{0.4pt} %obere Trennlinie setzen
+\renewcommand{\footrulewidth}{0.4pt} %untere Trennlinie
+
+% % % % % % % % % % % % % % Macros % % % % % % % % % % % % % % % % % % % % % % % % %
+% Gibt die uebergebene Zahl als roemische Zahl zurueck
+\newcommand{\RM}[1]{\MakeUppercase{\romannumeral #1{.}}}
+\newcommand{\tab}[1]{\hspace{.1\textwidth}\rlap{#1}}
+
+% macros for checkmarks
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\cmarkL}{{\Large \ding{51}}}
+\newcommand{\xmark}{\ding{55}}
+
+% nützliche Befehle:
+% \noindent
+% \hspace*{10mm}
+% \glqq text \grqq
+% $\rightarrow$
+% $\square$
+
+%\begin{figure}[h]
+%\begin{center}
+%\includegraphics[scale=0.6]{picture}
+%\caption{Morsefolgeerkenner}
+%\label{fig:morseprogJFLAP}
+%\end{center}
+%\end{figure}
+
+\begin{document}
+
+% create titlepage
+\begin{titlepage}
+	\centering
+	%\includegraphics[width=0.15\textwidth]{example-image-1x1}\par\vspace{1cm}
+	{\scshape\LARGE TU Graz \par}
+	\vspace{1cm}
+	{\scshape\Large Hausübung.1\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Softwareparadigmen\par}
+	\vspace{2cm}
+	{\Large\itshape Stefan Papst 1430868\par}
+	{\Large\itshape Kurt Nistelberger 1431233\par}
+	\vfill
+	supervised by\par
+	Försten \textsc{Ruprechter}
+
+	\vfill
+
+% Datum in der Fußzeile
+	{\large \today\par}
+\end{titlepage}
+
+% create Titlepage with Image and write name on/over the image
+%\begin{titlepage}
+%
+%	\newgeometry{left=1cm,bottom=0.1cm, top=0.5cm}
+%	\begin{picture}(100,650)	% choose size of picture
+%	\put(0,0){\includegraphics[scale=0.5]{deckblatt}} 	 % set picture on pos (0/0)
+%	\put(25,565){1431233}
+%	\put(180,565){Nistelberger Kurt}
+%	\put(25,585){1430387}
+%	\put(180,585){Weinrauch Alexander}
+%	\end{picture}
+%	\restoregeometry
+%
+%\end{titlepage}
+
+
+% Inhaltsverzeichnis, bei Änderungen muss zweimal compiliert werden
+\tableofcontents
+\newpage
+
+% Start of the real Document
+
+\section{Beispiel}
+\subsection{a}
+
+\end{document}
