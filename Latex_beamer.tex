@@ -1,0 +1,75 @@
+\documentclass{beamer}
+
+% ********************************
+% Presentation for Internship 2016
+% ********************************
+
+\usepackage{subfigure}
+
+
+\title{Synthesizer on AIG Graphs}
+\author{Internship 2016, Kurt Nistelberger}
+
+\begin{document}
+
+% creates the title page
+\maketitle
+ 
+ 
+\begin{frame}
+
+{\LARGE Goal of the Internship:} \\
+
+\begin{itemize}
+\item learn how a Synthesizer work
+\item What are Safety Games?
+\item What is AIGER?
+\item What is FRAIG?
+\item Deal with ABC
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Brief Introduction about Synthesizer}
+
+
+%einbinden einer Grafik
+\begin{figure}
+    \subfigure[Intput specification file to the synthesizer]{\includegraphics[scale=0.32]{spec.png} }
+    \subfigure[Output produced by synthesizer]{\includegraphics[scale=0.32]{output.png} }
+%\caption{Titel unterm gesamten Bild}
+\end{figure}
+
+Transition Function:\\
+\begin{center}
+$T = trans( x, c, i, x' ) \rightarrow T/F$  \\
+\end{center}
+
+\textbf{Aim:}\\
+{\small
+Find a circuit which controls the controllable inputs such that the
+error output will always stay FALSE, no matter what the sequence of
+uncontrollable inputs is.}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Safety Games}
+
+Explain Safety Games shortly plus the algorithm
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{AIGER}
+
+AIG = AND-Inverter-Graph\\
+AIGER = AIG + Latches\\
+
+\end{frame}
+
+\end{document}
