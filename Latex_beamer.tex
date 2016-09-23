@@ -4,7 +4,9 @@
 % Presentation for Internship 2016
 % ********************************
 
+\usepackage[utf 8]{inputenc}
 \usepackage{subfigure}
+\usepackage{color}
 
 
 \title{Synthesizer on AIG Graphs}
@@ -25,7 +27,7 @@
 \item What are Safety Games?
 \item What is AIGER?
 \item What is FRAIG?
-\item Deal with ABC
+\item Implement a Synthesizer in ABC
 \end{itemize}
 
 \end{frame}
@@ -35,17 +37,16 @@
 \frametitle{Brief Introduction about Synthesizer}
 
 
-%einbinden einer Grafik
 \begin{figure}
     \subfigure[Intput specification file to the synthesizer]{\includegraphics[scale=0.32]{spec.png} }
     \subfigure[Output produced by synthesizer]{\includegraphics[scale=0.32]{output.png} }
 %\caption{Titel unterm gesamten Bild}
 \end{figure}
 
-Transition Function:\\
-\begin{center}
-$T = trans( x, c, i, x' ) \rightarrow T/F$  \\
-\end{center}
+%Transition Function:\\
+%\begin{center}
+%$T = trans( x, c, i, x' ) \rightarrow T/F$  \\
+%\end{center}
 
 \textbf{Aim:}\\
 {\small
@@ -56,19 +57,413 @@ uncontrollable inputs is.}
 \end{frame}
 
 
+%\begin{frame}
+%\frametitle{Games}
+%Different types of games:\\
+%\begin{itemize}
+%\item Reachability Games
+%\item Safety Games
+%\item Büchi Games
+%\end{itemize}
+%We are going to solve safety games which means, something
+%bad never happens.
+%\end{frame}
+
+
 \begin{frame}
 \frametitle{Safety Games}
 
-Explain Safety Games shortly plus the algorithm
+
+\noindent\begin{minipage}{0.3\textwidth}% adapt widths of minipages to your needs
+\includegraphics[scale=0.3]{../../Documents/Internship_TU/saftey_games_states.png}
+\end{minipage}%
+\hfill%
+\begin{minipage}{0.4\textwidth}\raggedleft
+Exclude all states so that 
+we never leave the \\winning region.
+\end{minipage}
+
+\bigskip
+\bigskip
+
+\textbf{squares:} controlled by the environment, want to reach a bad state\\ 
+\textbf{circles:} we can control, we want to stay in the winning region \\
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Winning Region Algorithm}
+
+\textbf{def} $Cpre(dst_{(s)}):$ \\
+\noindent\hspace*{6mm} $dst'_{(s)} = dst_{(s)}|$ s is replaced by s'\\
+\noindent\hspace*{6mm} \textbf{return} $\forall i \exists c \exists s': trans( s, c, i, s' ) \wedge dst(s')$\\
+
+\bigskip
+
+\textbf{def} $calc\_win\_region(): $\\
+\noindent\hspace*{6mm} $cur_{(s)} = True$ \\
+\noindent\hspace*{6mm} \textbf{while} $True:$ \\
+\noindent\hspace*{12mm} $new_{(s)} = Cpre(cur_{(s)})$ \& $cur_{(s)} $ \\
+\noindent\hspace*{12mm} \textbf{if} $ new_{(s)} == cur_{(s)}$ \\
+\noindent\hspace*{18mm} \textbf{return} $cur_{(s)}$\\
+\noindent\hspace*{12mm} \textbf{if} $ new_{(s)} == 0$ \\
+\noindent\hspace*{18mm} \textbf{return} $0$\\
+\noindent\hspace*{12mm} $cur_{(s)} = new_{(s)}$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{How to compute a winning region using AIGs}
+
+
+\noindent\begin{minipage}{0.5\textwidth}% adapt widths of minipages to your needs
+We need the following Operations:
+\begin{itemize}
+\item AND-Operator
+\item $\exists$-Quantification
+\item $\forall$-Quantification
+\item compare two Circuits
+\end{itemize}
+
+\end{minipage}%
+\hfill%
+\begin{minipage}{0.4\textwidth}
+\includegraphics[scale=0.4]{../../Documents/Internship_TU/AIG_sample.png} 
+\end{minipage}
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{AIGER}
+\frametitle{Operators}
 
-AIG = AND-Inverter-Graph\\
-AIGER = AIG + Latches\\
+AND-Operator:
+
+\includegraphics[scale=0.4]{../../Documents/Internship_TU/Final_Presentation/AIG_AND.png} 
+
+%\bigskip
+
+$\exists$-Quantification:\\
+$ \exists c$ $Q(a, b, c) = Q(a, b, c=\top) \vee Q(a, b, c=\bot) $\\
+
+\bigskip
+
+$\forall$-Quantification:\\
+$ \forall c$ $Q(a, b, c) = Q(a, b, c=\top) \wedge Q(a, b, c=\bot) $
+
+\bigskip
+
+compare two Circuits: \\
+\begin{itemize}
+\item XOR the circuits
+\item Fraig the combined circuit
+\item check if the result is constant true
+\end{itemize}
+
+
+\end{frame}
+
+% AIGER-FileFormat Slide
+%\begin{frame}
+%\frametitle{AIG and AIGER}
+%\includegraphics[scale=0.3]{../../Documents/Internship_TU/aiger_format.png} 
+%\end{frame}
+
+\begin{frame}
+\frametitle{FRAIG - Functionally Reduced AIG}
+
+Introduce a new AND-Node \textbf{without} functional reduction,\\
+the following Pseudocode is used:\\
+
+\bigskip
+
+\textbf{if} $res=checkTrivialCases(n1, n2) $\\
+\noindent\hspace*{6mm} \textbf{return} $res$ \\
+\textbf{else if} $res=checkOneLevelStrashing(n1, n2) $\\
+\noindent\hspace*{6mm} \textbf{return} $res$ \\
+\textbf{else} \\
+\noindent\hspace*{6mm} \textbf{return} $createNewNode(n1,n2)$ \\
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{FRAIG - Functionally Reduced AIG}
+
+Introduce a new AND-Gate \textbf{with} functional reduction,\\
+the following steps are used:\\
+
+\bigskip
+
+\textbf{if} $res=checkTrivialCases(n1, n2) $\\
+\noindent\hspace*{6mm} \textbf{return} $res$ \\
+\textbf{else if} $res=checkOneLevelStrashing(n1, n2) $\\
+\noindent\hspace*{6mm} \textbf{return} $res$ \\
+\textbf{else} // functional Reduction \\
+\noindent\hspace*{6mm} $class = HashtableLookUp(n1,n2)$\\
+\noindent\hspace*{6mm} \textbf{if} $class == NULL$\\
+\noindent\hspace*{12mm} \textbf{return} $createNewNode(n1,n2)$\\
+\noindent\hspace*{6mm} \textbf{else} \\
+\noindent\hspace*{12mm} $res = checkEachCandidateInClass(class)$\\
+\noindent\hspace*{12mm} \textbf{if} $res == NULL$ \\
+\noindent\hspace*{18mm} \textbf{return} $createNewNode(n1,n2)$ \\
+\noindent\hspace*{12mm} \textbf{else}  \\
+\noindent\hspace*{18mm} \textbf{return} $res$ \\
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{ABC: A System for Sequential Synthesis and Verification}
+
+ABC is a tool for sequential Synthesis and Verification and provides 
+lots of Algorithms for: Model checking, equivalence checking, logic synthesis, 
+reachability computation, verification...\\
+
+\bigskip
+
+\textbf{Why we used ABC as base:} \\
+Because it also provides many functions to deal with AIG-Files.\\
+e.g. Read/Write-Operations, AND-Operator, Variable-Quantification, 
+Transition Relation Computation....
+
+%\textbf{Quote:} The goal of the ABC project is to provide a public-domain %implementation of the state-of-the-art combinational and sequential synthesis %algorithms.\\
+
+%\bigskip
+
+%It provides Algorithms for: Model checking, equivalence checking, logic synthesis, 
+%reachability computation, verification...\\
+
+%\bigskip
+
+%Advantages why we use ABC as basis:\\
+
+%\begin{itemize}
+%\item<1-> provides internal handling of AIGs Read/Write
+%\item<2-> provides many useful functions to deal with AIGs
+%\item<3-> provides useful functions to compute transition relation and variable quantification
+%\end{itemize}
+
+
+\end{frame}
+
+%\begin{frame}
+%\frametitle{ABC: A System for Sequential Synthesis and Verification}
+
+%\bigskip
+
+%Disadvantages of using ABC:\\
+%\begin{itemize}
+%\item<1-> ABC is a very big project
+%\item<2-> provides to many functions for dealing with AIGs
+%\item<3-> use three different AIG-Manager internally
+%\item<4-> some functions might not behave as you wish (e.g. AND-Operator)
+%\end{itemize}
+
+%\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex1.png} 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex2.png} 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex3.png} 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex4.png} 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex5.png} 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex6.png} 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{First Implementation, Results}
+
+\includegraphics[scale=0.19]{../../Documents/Internship_TU/ex7.png} 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Hat-Problem}
+
+The grows after every Quantification Operation and we have to get rid
+of hat.\\
+I applied several optimizations which were already implemented in ABC.
+(and also more..)
+
+\bigskip
+
+\textbf{What have I tried:} \\
+\begin{itemize}[label={}]
+\item<2-> fraig
+\item<3-> rewrite
+\item<4-> dc2 ( rewrite, refactor, balance )
+\item<5-> dc2 several times
+\end{itemize}
+
+\bigskip
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mitigation for the Hat-Problem}
+
+Reduce the number of $\exists$-Quantification calls, by a reduce of
+the number of Inputs.\\
+
+\bigskip
+
+Implement Vector Compose.
+
+\bigskip
+
+\textbf{Advantages of Vector Compose:}\\
+
+\begin{itemize}
+
+\item represent every prime variable through its prime AIG
+\item reduces the number of primary inputs
+\item reduces the number of $\exists$-Quantifications
+\item transition relation is no more needed
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Winning Region Algorithm with VectorCompose}
+
+\textbf{def} $Cpre(dst_{(s)}):$ \\
+\noindent\hspace*{6mm} // {\small  \emph{ \color{gray} $dst'_{(s)} = dst_{(s)}|$ s is replaced by s'}}\\
+\noindent\hspace*{6mm} // {\small  \emph{ \color{gray}\textbf{return} $\forall i \exists c \exists s': trans( s, c, i, s' ) \wedge dst(s')$}} \\
+%\noindent\hspace*{6mm} \textbf{return} $\forall i \exists c \exists s': trans( s, c, i, s' ) \wedge dst(s')$\\
+\noindent\hspace*{6mm} \textbf{return} $\forall i \exists c : dst[s’ \leftrightarrow func(s, c, i) ]$\\
+
+\bigskip
+
+\textbf{def} $calc\_win\_region(): $\\
+\noindent\hspace*{6mm} $cur_{(s)} = True$  \\
+\noindent\hspace*{6mm} \textbf{while} $True:$ \\
+\noindent\hspace*{12mm} $new_{(s)} = Cpre(cur_{(s)})$ \& $cur_{(s)} $ \\
+\noindent\hspace*{12mm} \textbf{if} $ new_{(s)} == cur_{(s)}$ \\
+\noindent\hspace*{18mm} \textbf{return} $cur_{(s)}$\\
+\noindent\hspace*{12mm} \textbf{if} $ new_{(s)} == 0$ \\
+\noindent\hspace*{18mm} \textbf{return} $0$\\
+\noindent\hspace*{12mm} $cur_{(s)} = new_{(s)}$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation for VectorCompose}
+
+\begin{figure}
+
+\includegraphics[scale=0.35]{../../Documents/Internship_TU/time_comp.png} 
+\caption{time usage graph}
+
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation for VectorCompose}
+
+\begin{figure}
+\includegraphics[scale=0.5]{../../Documents/Internship_TU/speed_comp.png} 
+\caption{speed graph}
+\end{figure}
+ 
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Implementation, Results}
+
+\includegraphics[scale=0.35]{../../Documents/Internship_TU/abcVSaisy.png} 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summary of the Internship}
+
+\textbf{encountered problems with ABC:}\\
+
+\begin{itemize}
+\item<1-> Code in ABC is sometimes very hard to read because it is perfomance optimized\\ 
+	  (thats why I assumed everything inside ABC works properly)
+\item<2-> some functions may not behave as you expect \\
+	  (e.g. AND-Operator)
+\item<3-> if ABC throwed an assertion checked if the assertion is really necessary
+\item<4-> before you implement a function from scratch try to find a similar 			implementation in ABC (cut vs. node)
+
+\end{itemize}
+
+\end{frame}
+
+
+%\begin{frame}
+%\frametitle{Summary of the Internship}
+%\begin{itemize}
+%\item<1-> the start was hard
+%\item<2-> the end was  harder
+%\item<3-> it took me a while to deal with ABC 
+%\item<4-> the problem with the hat still exists
+%\end{itemize}
+%\end{frame}
+
+
+\begin{frame}
+\frametitle{Future work}
+
+\begin{itemize}
+
+\item carefully analyse why the circuit grows so fast...\\
+\item more effient implementation of Vector Compose
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+
+\begin{center}
+{\LARGE \textbf{Questions?}}
+\end{center}
 
 \end{frame}
 
