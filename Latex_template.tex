@@ -1,24 +1,24 @@
 \documentclass[a4paper, 11pt]{article}
 
 % % % % % % % % % % % % % % Usepackages % % % % % % % % % % % % % % % % % % % % % %
-\usepackage[utf 8]{inputenc}				% fuer Umlaute
+\usepackage[utf 8]{inputenc}		% fuer Umlaute
 \usepackage{amsmath}						% Mathebibliothek, notwendig für Matrizenschreibweise
-\usepackage{tikz}							% fuer Tikz-Skizzen
+\usepackage{tikz}								% fuer Tikz-Skizzen
 \usepackage{graphicx}						% um Bilder einzufügen
 \usepackage{fancyhdr}						% fue Fancy-Header notwendig
-\usepackage[left=2.5cm,
-			right=2.5cm,
-			top=2.5cm,
-			bottom=2.5cm,
-			includeheadfoot]{geometry}		% Seitraender anpassen
-
+\usepackage[T1]{fontenc}				% for encoding of special charackters with out escaping them
+\usepackage[left=3.1cm,
+	right=2.5cm,
+	top=3.6cm,
+	bottom=2cm,
+	footskip=25pt,
+	includeheadfoot]{geometry}		% Seitenrändern für geometry package anpassen
 
 \usepackage{caption}[2008/08/24]			% fuer Bilderbeschriftung
 \usepackage{pifont}							% fue checkmarks and other symbols
 \usepackage{amssymb}
 \usepackage{german}
-\usepackage{geometry}
-
+\usepackage[pages=some]{background}	% to allow background images
 
 % Header einfuegen, ueber fancy-Header
 \pagestyle{fancy} 				% eigener Seitenstil
@@ -47,15 +47,24 @@
 % $\rightarrow$
 % $\square$
 
-%\begin{figure}[h]
-%\begin{center}
-%\includegraphics[scale=0.6]{picture}
-%\caption{Morsefolgeerkenner}
-%\label{fig:morseprogJFLAP}
-%\end{center}
+%\begin{figure}[!htbp]
+%	\begin{center}
+%		\includegraphics[scale=0.22]{image}
+%		\caption{ARP Cache}
+%		\label{fig:reference_label}
+%	\end{center}
 %\end{figure}
 
-\begin{document}
+\backgroundsetup{
+	scale=1,
+	color=black,
+	opacity=1,
+	angle=0,
+	contents={%
+		\includegraphics[width=\paperwidth,height=\paperheight]{titlepage.pdf}
+	}%
+}
+
 
 % create titlepage
 \begin{titlepage}
@@ -80,20 +89,16 @@
 \end{titlepage}
 
 % create Titlepage with Image and write name on/over the image
+% geometry and restoregeometry caused a lot of troubles so i switched to background images
 %\begin{titlepage}
-%
-%	\newgeometry{left=1cm,bottom=0.1cm, top=0.5cm}
-%	\begin{picture}(100,650)	% choose size of picture
-%	\put(0,0){\includegraphics[scale=0.5]{deckblatt}} 	 % set picture on pos (0/0)
-%	\put(25,565){1431233}
-%	\put(180,565){Nistelberger Kurt}
-%	\put(25,585){1430387}
-%	\put(180,585){Weinrauch Alexander}
-%	\end{picture}
-%	\restoregeometry
-%
+%\BgThispage	% start page with background image here
+%\begin{picture}(0,300)        % choose size of picture for the content
+%	%\put(x,y){content}
+%	\put(115,204){{\Large Nistelberger}}
+%	\put(115,172){{\Large 1431233}}
+%\end{picture}
+%\clearpage		% end page with background image
 %\end{titlepage}
-
 
 % Inhaltsverzeichnis, bei Änderungen muss zweimal compiliert werden
 \tableofcontents
